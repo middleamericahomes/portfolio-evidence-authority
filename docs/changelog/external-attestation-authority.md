@@ -7,7 +7,7 @@ The new authority accepts only a receipt class, exact filename, and SHA-256 dige
 Actions validates that closed contract, then GitHub's OIDC and Sigstore service attest the
 digest. No private key or evidence payload is stored here.
 
-![The authority's local contract test accepts three valid receipt classes and rejects eight malformed or confused inputs.](../../assets/changelog/external-attestation-authority-tests.png)
+![The authority's GitHub Actions contract test completed successfully with three valid receipt classes and eight malformed or confused inputs covered.](../../assets/changelog/external-attestation-authority-tests.jpg)
 
 _The authority's contract tests cover all supported receipt classes plus malformed digest,
 path traversal, filename confusion, ceremony confusion, and extension confusion._
