@@ -1,0 +1,49 @@
+name: Attest portfolio evidence digest
+
+on:
+  workflow_dispatch:
+    inputs:
+      ceremony:
+        description: Canonical receipt class
+        required: true
+        type: choice
+        options:
+          - activation
+          - retirement
+          - execution-ledger
+      subject_name:
+        description: Digest-bound receipt filename
+        required: true
+        type: string
+      subject_sha256:
+        description: Lowercase SHA-256 digest
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+jobs:
+  attest:
+    name: Validate and attest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out immutable authority
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+
+      - name: Validate closed dispatch contract
+        env:
+          CEREMONY: ${{ inputs.ceremony }}
+          SUBJECT_NAME: ${{ inputs.subject_name }}
+          SUBJECT_SHA256: ${{ inputs.subject_sha256 }}
+        run: scripts/validate-dispatch.sh
+
+      - name: Attest exact subject digest
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d
+        with:
+          subject-name: ${{ inputs.subject_name }}
+          subject-digest: sha256:${{ inputs.subject_sha256 }}
